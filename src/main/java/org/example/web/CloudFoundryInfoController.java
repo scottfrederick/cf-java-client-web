@@ -36,23 +36,27 @@ public class CloudFoundryInfoController {
 	}
 
 	private List<CloudApplication> getApps(CloudFoundryClient client) {
-		log.info("Getting applications");
+		log("Getting applications");
 		List<CloudApplication> applications = client.getApplications();
-		log.info("Done getting applications");
+		log("Done getting applications");
 		return applications;
 	}
 
 	private List<CloudRoute> getRoutes(CloudFoundryClient client) {
-		log.info("Getting routes");
+		log("Getting routes");
 		List<CloudRoute> routes = client.getRoutes(cloudFoundryProperties.getDomain());
-		log.info("Done getting routes");
+		log("Done getting routes");
 		return routes;
 	}
 
 	private List<CloudService> getServices(CloudFoundryClient client) {
-		log.info("Getting services");
+		log("Getting services");
 		List<CloudService> services = client.getServices();
-		log.info("Done getting services");
+		log("Done getting services");
 		return services;
+	}
+
+	private void log(String msg) {
+		log.info(msg + " on thread {}", Thread.currentThread().getId());
 	}
 }
