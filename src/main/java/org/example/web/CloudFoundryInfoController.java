@@ -32,7 +32,7 @@ public class CloudFoundryInfoController {
 	}
 
 	private CloudFoundryInfo getCloudInfo(CloudFoundryClient client) {
-		return new CloudFoundryInfo(getServices(client), getRoutes(client), getApps(client));
+		return new CloudFoundryInfo(getServices(client), getApps(client));
 	}
 
 	private List<CloudApplication> getApps(CloudFoundryClient client) {
@@ -40,13 +40,6 @@ public class CloudFoundryInfoController {
 		List<CloudApplication> applications = client.getApplications();
 		log("Done getting applications");
 		return applications;
-	}
-
-	private List<CloudRoute> getRoutes(CloudFoundryClient client) {
-		log("Getting routes");
-		List<CloudRoute> routes = client.getRoutes(cloudFoundryProperties.getDomain());
-		log("Done getting routes");
-		return routes;
 	}
 
 	private List<CloudService> getServices(CloudFoundryClient client) {
