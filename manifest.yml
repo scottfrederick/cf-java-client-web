@@ -1,0 +1,9 @@
+---
+applications:
+- name: cf-java-client-web
+  memory: 1G
+  random-route: true
+  path: build/libs/cf-java-client-web-0.1.0.jar
+  env:
+    CF_TARGET: https://api.system.13.91.52.217.cf.pcfazure.com
+

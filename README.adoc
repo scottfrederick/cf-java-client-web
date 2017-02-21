@@ -1,0 +1,33 @@
+= cf-java-client-web
+
+This is a trivial app used to demonstrate an app running on CF talking to CC on the same platform.
+
+== Build
+
+. Using Gradle, build and package the application:
++
+----
+$ ./gradlew clean assemble
+----
++
+
+
+== Deploy to Pivotal Cloud Foundry
+
+. Edit the `manifest.yml` file in this project to set the `CF_TARGET` environment variable to the API endpoint of the CF platform you want to test.
+
+. Push the app to CF
++
+----
+$ cf push
+----
+
+== Test the Application
+
+. In a browser, access the  application at the route that was created for you.
+. In a terminal window, run `cf logs cf-java-client-web` to view the logs of the app while sending requests.
+. Press the `Connect` button on the web UI to connect the UI frontend to the backend.
+. Immediately after connecting, press the `Request` button. This will send one request to the `/v2/info` endpoint of Pivotal Web Servies (an API endpoint external to the platform) and one request to the `/v2/info` enpoint of the platform specified by `CF_TARGET`. You should see a raw JSON dump on the UI.
+. Repeatedly pressing the `Request` button should return results within a few seconds.
+. Let the app sit idle for at least 15 minutes.
+. Press the `Request` button again. The request to PWS should succeed, but the request to the `CF_TARGET` endpoint should hang for about 15 minutes with `pending` displayed on the UI. After 15 minutes the app will get a `Connection timed out` exception.

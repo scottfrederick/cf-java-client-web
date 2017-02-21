@@ -1,14 +1,3 @@
 security:
   basic:
     enabled: false
-
-cf:
-  target: https://api.system.example.com
-  username: admin
-  password: secret
-  domain: app.system.com
-  org: test
-  space: development
-  trustSelfSignedCerts: true
-  debug: false
-  verbose: true

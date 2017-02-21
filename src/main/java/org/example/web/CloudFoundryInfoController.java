@@ -1,62 +1,43 @@
 package org.example.web;
 
-import org.cloudfoundry.client.lib.CloudFoundryClient;
-import org.cloudfoundry.client.lib.domain.CloudApplication;
-import org.cloudfoundry.client.lib.domain.CloudRoute;
-import org.cloudfoundry.client.lib.domain.CloudService;
-import org.example.model.CloudFoundryInfo;
-import org.example.model.CloudFoundryProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class CloudFoundryInfoController {
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CloudFoundryInfoController.class);
 
-	private CloudFoundryProperties cloudFoundryProperties;
-	private final CloudFoundryClient cloudFoundryClient;
+	@Value("${cf.target}")
+	private String cloudfoundryTarget;
 
-	public CloudFoundryInfoController(CloudFoundryProperties cloudFoundryProperties, CloudFoundryClient cloudFoundryClient) {
-		this.cloudFoundryProperties = cloudFoundryProperties;
-		this.cloudFoundryClient = cloudFoundryClient;
+	public CloudFoundryInfoController() {
 	}
 
 	@MessageMapping("/request")
 	@SendTo("/topic/messages")
-	public CloudFoundryInfo cloudFoundryInfo() throws Exception {
-		return getCloudInfo(cloudFoundryClient);
+	public Map<String, String> cloudFoundryInfo() throws Exception {
+		return getCloudInfo();
 	}
 
-	private CloudFoundryInfo getCloudInfo(CloudFoundryClient client) {
-		return new CloudFoundryInfo(getServices(client), getRoutes(client), getApps(client));
+	private Map<String, String> getCloudInfo() {
+		Map<String, String> results = new HashMap<>(2);
+		results.put("PWS info", getInfo("https://api.run.pivotal.io/v2/info"));
+		results.put("private info", getInfo(cloudfoundryTarget + "/v2/info"));
+		return results;
 	}
 
-	private List<CloudApplication> getApps(CloudFoundryClient client) {
-		log("Getting applications");
-		List<CloudApplication> applications = client.getApplications();
-		log("Done getting applications");
-		return applications;
-	}
-
-	private List<CloudRoute> getRoutes(CloudFoundryClient client) {
-		log("Getting routes");
-		List<CloudRoute> routes = client.getRoutes(cloudFoundryProperties.getDomain());
-		log("Done getting routes");
-		return routes;
-	}
-
-	private List<CloudService> getServices(CloudFoundryClient client) {
-		log("Getting services");
-		List<CloudService> services = client.getServices();
-		log("Done getting services");
-		return services;
-	}
-
-	private void log(String msg) {
-		log.info(msg + " on thread {}", Thread.currentThread().getId());
+	private String getInfo(String url) {
+		log.info("Getting info from {}", url);
+		RestTemplate restTemplate = new RestTemplate();
+		String response = restTemplate.getForObject(url, String.class);
+		log.info("Done getting info from {}", url);
+		return response;
 	}
 }
