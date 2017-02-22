@@ -2,10 +2,9 @@ package org.example.web;
 
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.domain.CloudApplication;
-import org.cloudfoundry.client.lib.domain.CloudRoute;
+import org.cloudfoundry.client.lib.domain.CloudInfo;
 import org.cloudfoundry.client.lib.domain.CloudService;
 import org.example.model.CloudFoundryInfo;
-import org.example.model.CloudFoundryProperties;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -17,11 +16,9 @@ public class CloudFoundryInfoController {
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CloudFoundryInfoController.class);
 
-	private CloudFoundryProperties cloudFoundryProperties;
 	private final CloudFoundryClient cloudFoundryClient;
 
-	public CloudFoundryInfoController(CloudFoundryProperties cloudFoundryProperties, CloudFoundryClient cloudFoundryClient) {
-		this.cloudFoundryProperties = cloudFoundryProperties;
+	public CloudFoundryInfoController(CloudFoundryClient cloudFoundryClient) {
 		this.cloudFoundryClient = cloudFoundryClient;
 	}
 
@@ -32,7 +29,14 @@ public class CloudFoundryInfoController {
 	}
 
 	private CloudFoundryInfo getCloudInfo(CloudFoundryClient client) {
-		return new CloudFoundryInfo(getServices(client), getApps(client));
+		return new CloudFoundryInfo(getInfo(client), getServices(client), getApps(client));
+	}
+
+	private CloudInfo getInfo(CloudFoundryClient client) {
+		log("Getting info");
+		CloudInfo cloudInfo = client.getCloudInfo();
+		log("Done getting info");
+		return cloudInfo;
 	}
 
 	private List<CloudApplication> getApps(CloudFoundryClient client) {
