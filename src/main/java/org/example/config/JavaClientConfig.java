@@ -4,9 +4,9 @@ import org.cloudfoundry.client.lib.CloudCredentials;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.example.model.CloudFoundryProperties;
 import org.example.web.SampleRestLogCallback;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -14,12 +14,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 @Configuration
-public class CloudFoundryConfig {
-	@Bean
-	@ConfigurationProperties(prefix = "cf")
-	public CloudFoundryProperties cloudFoundryProperties() {
-		return new CloudFoundryProperties();
-	}
+@Profile("java-client")
+public class JavaClientConfig {
 
 	@Bean
 	public CloudFoundryClient cloudFoundryClient(CloudFoundryProperties cloudFoundryProperties) {
@@ -31,8 +27,7 @@ public class CloudFoundryConfig {
 
 		CloudFoundryClient client = new CloudFoundryClient(credentials,
 				getTargetURL(cloudFoundryProperties.getTarget()),
-				cloudFoundryProperties.getOrg(),
-				cloudFoundryProperties.getSpace(), null, cloudFoundryProperties.isTrustSelfSignedCerts());
+				cloudFoundryProperties.isTrustSelfSignedCerts());
 
 		if (cloudFoundryProperties.isVerbose()) {
 			client.registerRestLogListener(new SampleRestLogCallback());

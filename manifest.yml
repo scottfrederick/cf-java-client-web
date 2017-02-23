@@ -4,5 +4,6 @@ applications:
   memory: 1G
   random-route: true
   path: build/libs/cf-java-client-web-0.1.0.jar
-
+  env:
+    SPRING_PROFILES_ACTIVE: rest-template
 

@@ -3,11 +3,9 @@ security:
     enabled: false
 
 cf:
-  target: https://api.system.example.com
+  target: https://api.system.13.91.52.217.cf.pcfazure.com
   username: admin
   password: secret
-  org: test
-  space: development
   trustSelfSignedCerts: true
   debug: false
   verbose: true

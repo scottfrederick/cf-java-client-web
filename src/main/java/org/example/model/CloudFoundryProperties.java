@@ -4,9 +4,6 @@ public class CloudFoundryProperties {
 	private String target;
 	private String username;
 	private String password;
-	private String org;
-	private String space;
-	private String domain;
 	private boolean trustSelfSignedCerts;
 	private boolean verbose;
 	private boolean debug;
@@ -33,30 +30,6 @@ public class CloudFoundryProperties {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getOrg() {
-		return org;
-	}
-
-	public void setOrg(String org) {
-		this.org = org;
-	}
-
-	public String getSpace() {
-		return space;
-	}
-
-	public void setSpace(String space) {
-		this.space = space;
-	}
-
-	public String getDomain() {
-		return domain;
-	}
-
-	public void setDomain(String domain) {
-		this.domain = domain;
 	}
 
 	public boolean isTrustSelfSignedCerts() {
